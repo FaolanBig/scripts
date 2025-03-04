@@ -1,0 +1,42 @@
+#!/bin/bash
+
+DEVICE="/dev/sr0"
+OUTPUT_DIR="/mnt/media/Movies"
+FORMAT="mkv"
+HBCLI_PRESET="Fast 1080p30"
+SLEEP_INTERVAL=60 # in seconds
+
+if ! command -v HandBrakeCLI &> /dev/null; then
+    echo "ERROR: HandBrakeCLI installation not found."
+    echo "install HandBrakeCLI with 'sudo apt install handbrake-cli'"
+    exit 1
+fi
+
+while true; do
+    echo "waiting for DVD..."
+    while ! blkid $DEVICE &> /dev/null; do
+        sleep 5
+    done
+
+    echo "reading DVD..."
+    DVD_LABEL=$(blkid -o value -s LABEL $DEVICE)
+    if [ -z "$DVD_LABEL" ]; then
+        DVD_LABEL="Unknown_DVD"
+    fi
+    
+    OUTPUT_FILE="$OUTPUT_DIR/$DVD_LABEL.$FORMAT"
+    echo "starting ripping process with HandBrakeCLI for --- $OUTPUT_FILE ---"
+    echo "HandBrake preset: $HBCLI_PRESET"
+    echo "ripping..."
+    HandBrakeCLI -i $DEVICE -o "$OUTPUT_FILE" --preset="$HBCLI_PRESET" --all-audio --all-subtitles
+    
+    echo "finished ripping for --- $OUTPUT_FILE ---"
+
+    echo "ejecting DVD..."
+    eject $DEVICE
+    echo "DVD ejected"
+
+    echo "sleeping for $SLEEP_INTERVAL"
+    echo "press CTRL+C to interrupt and exit"
+    sleep $SLEEP_INTERVAL
+done
