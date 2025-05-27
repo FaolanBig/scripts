@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Voraussetzungen
 sudo apt update
 sudo apt install -y lib32gcc-s1 lib32stdc++6 curl wget unzip tar screen
 
-# Neuen Benutzer anlegen
 sudo adduser --disabled-password --gecos "" cs2server
 
-# SteamCMD herunterladen und entpacken
 sudo -u cs2server bash <<EOF
 cd ~
 mkdir -p steamcmd && cd steamcmd
