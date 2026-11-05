@@ -2,12 +2,11 @@
 
 ##############################################################
 ### Install the latest version of Docker on a Linux system ###
-### RUN THIS SCRIPT AS ROOT OR WITH                    ###
+### RUN THIS SCRIPT AS ROOT OR WITH SUDO               ###
 ##############################################################
 
 if [ "$EUID" -ne 0 ]; then
-  echo "Please run as root or with "
-  exit
+  exec sudo -- "$0" "$@"
 fi
 
 # Remove any old versions of Docker if they exist
