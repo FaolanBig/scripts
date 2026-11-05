@@ -1,14 +1,16 @@
 #!/bin/bash
 
-###############################################################
-### Install the latest version of Docker on a Linux system  ###
-### RUN THIS SCRIPT AS ROOT OR WITH SUDO OR RUN             ###
-### `curl -L https://docker-install-scripts.bigvault.cloud` ###
-###############################################################
+### README ########################################################
+# This script installs the latest version of the Docker Engine    #
+# onto your machine. If not run as root it will promt for sudo    #
+# password. To quickly execute it without manually downloading    #
+# it, simply run one of the following commands in your terminal:  #
+# `curl -L https://docker-install-script.bigvault.cloud | bash`   #
+# `wget -qO- https://docker-install-script.bigvault.cloud | bash` #
+###################################################################
 
 if [ "$EUID" -ne 0 ]; then
-  echo "Please run as root or with "
-  exit
+  exec sudo -- "$0" "$@"
 fi
 
 # Remove any old versions of Docker if they exist
