@@ -1,8 +1,9 @@
 #!/bin/bash
 
-##############################################################
-### Install the latest version of Docker on a Linux system ###
-### RUN THIS SCRIPT AS ROOT OR WITH                    ###
+###############################################################
+### Install the latest version of Docker on a Linux system  ###
+### RUN THIS SCRIPT AS ROOT OR WITH SUDO OR RUN             ###
+### `curl -L https://docker-install-scripts.bigvault.cloud` ###
 ##############################################################
 
 if [ "$EUID" -ne 0 ]; then
