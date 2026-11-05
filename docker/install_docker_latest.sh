@@ -4,7 +4,7 @@
 ### Install the latest version of Docker on a Linux system  ###
 ### RUN THIS SCRIPT AS ROOT OR WITH SUDO OR RUN             ###
 ### `curl -L https://docker-install-scripts.bigvault.cloud` ###
-##############################################################
+###############################################################
 
 if [ "$EUID" -ne 0 ]; then
   echo "Please run as root or with "
