@@ -1,22 +1,20 @@
 {
-        admin off
-}
-
-layer4 {
-        :25 {
-                route {
-                        proxy {
-                                upstream windmill_server:2525
-                        }
-                }
-        }
+	layer4 {
+		:25 {
+			route {
+				proxy {
+					upstream windmill_server:2525
+				}
+			}
+		}
+	}
 }
 
 {$BASE_URL} {
-        bind {$ADDRESS:0.0.0.0 ::}
+	bind {$ADDRESS:0.0.0.0 ::}
 
-        @extra path /ws/* /ws_mp/* /ws_debug/*
-        reverse_proxy @extra http://windmill_extra:3000
+	@extra path /ws/* /ws_mp/* /ws_debug/*
+	reverse_proxy @extra http://windmill_extra:3000
 
-        reverse_proxy /* http://windmill_server:8000
+	reverse_proxy /* http://windmill_server:8000
 }
