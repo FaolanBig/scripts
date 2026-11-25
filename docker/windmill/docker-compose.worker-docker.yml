@@ -28,6 +28,8 @@ services:
       WORKER_GROUP: "${DOCKER_WORKER_GROUP:-docker-test}"
       WORKER_TAGS: "${DOCKER_WORKER_TAGS:-docker-test}"
       KEEP_JOB_DIR: "${KEEP_JOB_DIR:-false}"
+      FAVOR_UNSHARE_PID: "${FAVOR_UNSHARE_PID:-false}"
+      DISABLE_NSJAIL: "${DISABLE_NSJAIL:-false}"
       DOCKER_HOST: tcp://docker-test-daemon:2375
       DOCKER_TLS_VERIFY: ""
       DOCKER_TLS_CERTDIR: ""
