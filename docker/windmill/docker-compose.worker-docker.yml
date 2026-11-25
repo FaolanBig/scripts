@@ -1,0 +1,69 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "${LOG_MAX_SIZE:-20m}"
+    max-file: "${LOG_MAX_FILE:-10}"
+    compress: "true"
+
+networks:
+  docker-control:
+    driver: bridge
+    internal: true
+
+  docker-egress:
+    driver: bridge
+
+volumes:
+  docker-test-daemon-data:
+
+services:
+  windmill_worker_docker:
+    image: "${WM_IMAGE:-ghcr.io/windmill-labs/windmill:1.883.0}"
+    pull_policy: missing
+    restart: unless-stopped
+    privileged: false
+    environment:
+      DATABASE_URL: "${DATABASE_URL:?Set DATABASE_URL in worker.env}"
+      MODE: worker
+      WORKER_GROUP: "${DOCKER_WORKER_GROUP:-docker-test}"
+      WORKER_TAGS: "${DOCKER_WORKER_TAGS:-docker-test}"
+      KEEP_JOB_DIR: "${KEEP_JOB_DIR:-false}"
+      DOCKER_HOST: tcp://docker-test-daemon:2375
+      DOCKER_TLS_VERIFY: ""
+      DOCKER_TLS_CERTDIR: ""
+    depends_on:
+      docker-test-daemon:
+        condition: service_healthy
+    volumes:
+      - /srv/data/windmill/docker-cache:/tmp/windmill/cache
+      - /srv/data/windmill/docker-logs:/tmp/windmill/logs
+      - /srv/config:/srv/config:ro
+    networks:
+      - docker-control
+      - docker-egress
+    logging: *default-logging
+
+  docker-test-daemon:
+    image: "${DIND_IMAGE:-docker:27-dind}"
+    pull_policy: missing
+    restart: unless-stopped
+    privileged: true
+    cgroup: private
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    expose:
+      - "2375"
+    volumes:
+      - docker-test-daemon-data:/var/lib/docker
+    healthcheck:
+      test: ["CMD-SHELL", "docker info >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+    networks:
+      docker-control:
+        aliases:
+          - docker-test-daemon
+      docker-egress:
+    logging: *default-logging
