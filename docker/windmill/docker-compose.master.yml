@@ -8,6 +8,7 @@ x-logging: &default-logging
 services:
   db:
     image: postgres:18
+    pull_policy: missing
     shm_size: 1g
     restart: unless-stopped
     volumes:
@@ -26,8 +27,8 @@ services:
     logging: *default-logging
 
   windmill_server:
-    image: "${WM_IMAGE:-ghcr.io/windmill-labs/windmill:main}"
-    pull_policy: always
+    image: "${WM_IMAGE:-ghcr.io/windmill-labs/windmill:1.883.0}"
+    pull_policy: missing
     restart: unless-stopped
     expose:
       - 8000
@@ -44,8 +45,8 @@ services:
     logging: *default-logging
 
   windmill_extra:
-    image: ghcr.io/windmill-labs/windmill-extra:latest
-    pull_policy: always
+    image: "${WM_EXTRA_IMAGE:-ghcr.io/windmill-labs/windmill-extra:1.883.0}"
+    pull_policy: missing
     restart: unless-stopped
     expose:
       - 3001
@@ -66,6 +67,7 @@ services:
 
   caddy:
     image: ghcr.io/windmill-labs/caddy-l4:2.11.4-1
+    pull_policy: missing
     restart: unless-stopped
     volumes:
       - /srv/config/Caddyfile:/etc/caddy/Caddyfile:ro

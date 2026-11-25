@@ -7,8 +7,8 @@ x-logging: &default-logging
 
 services:
   windmill_worker:
-    image: "${WM_IMAGE:-ghcr.io/windmill-labs/windmill:main}"
-    pull_policy: always
+    image: "${WM_IMAGE:-ghcr.io/windmill-labs/windmill:1.883.0}"
+    pull_policy: missing
     restart: unless-stopped
     privileged: true
     environment:
@@ -24,8 +24,8 @@ services:
     logging: *default-logging
 
   windmill_worker_native:
-    image: "${WM_IMAGE:-ghcr.io/windmill-labs/windmill:main}"
-    pull_policy: always
+    image: "${WM_IMAGE:-ghcr.io/windmill-labs/windmill:1.883.0}"
+    pull_policy: missing
     restart: unless-stopped
     environment:
       DATABASE_URL: "${DATABASE_URL:?Set DATABASE_URL in worker.env}"
